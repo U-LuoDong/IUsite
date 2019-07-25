@@ -29,11 +29,17 @@ class Article  extends Model
     }
 
     /**
-     * 获取全站的热点文章
+     * 获取全站的热点文章  只查找文章和单页栏目的
      * @return mixed
      */
     public function getSerHot(){
-       $artRes=db('article')->order('click desc')->limit(5)->select();
+        $artId=db('cate')->field('id')->where("type IN(1,2)")->select();
+        $arr=array();
+        for ($i=0;$i<count($artId);$i++){
+            $arr[]=$artId[$i]['id'];
+        }
+        $articalId=implode(',', $arr);//将数组转换成一个字符串
+       $artRes=db('article')->where("cateid IN($articalId)")->order('click desc')->limit(5)->select();
         return $artRes; 
     }
 
@@ -48,7 +54,7 @@ class Article  extends Model
             $arr[]=$artId[$i]['id'];
         }
         $articalId=implode(',', $arr);//将数组转换成一个字符串
-        $siteHotArt=$this->field('id,title,thumb')->where("id IN($articalId)")->order('click desc')->limit(5)->select();
+        $siteHotArt=$this->field('id,title,thumb')->where("cateid IN($articalId)")->order('click desc')->limit(5)->select();
         return $siteHotArt;
     }
 
@@ -63,7 +69,7 @@ class Article  extends Model
             $arr[]=$artId[$i]['id'];
         }
         $articalId=implode(',', $arr);//将数组转换成一个字符串
-        $newArtiecleRes=db('article')->field('a.id,a.title,a.desc,a.thumb,a.click,a.zan,a.time,c.catename')->alias('a')->join('bk_cate c','a.cateid=c.id')->where("a.id IN($articalId)")->order('a.id desc')->limit(5)->select();
+        $newArtiecleRes=db('article')->field('a.id,a.title,a.desc,a.thumb,a.click,a.zan,a.time,c.catename')->alias('a')->join('bk_cate c','a.cateid=c.id')->where("a.cateid IN($articalId)")->order('a.id desc')->limit(5)->select();
         return $newArtiecleRes;
     }
 
