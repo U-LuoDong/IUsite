@@ -9,7 +9,7 @@
                 <!-- Sidebar Menu -->
                 <ul class="nav sidebar-menu">
                     <!--Dashboard-->
-                    <li>
+                    <li {if condition="$con eq 'Admin'"} class="open" {/if}>
                         <a href="#" class="menu-dropdown">
                             <i class="menu-icon fa fa-user"></i>
                             <span class="menu-text">管理员</span>
@@ -40,7 +40,7 @@
                         </ul>                            
                     </li> 
 
-                    <li>
+                    <li {if condition="$con eq 'Cate'"} class="open" {/if}>
                         <a href="#" class="menu-dropdown">
                             <i class="menu-icon fa fa-folder"></i>
                             <span class="menu-text">栏目管理</span>
@@ -57,7 +57,7 @@
                         </ul>                            
                     </li> 
 
-                    <li>
+                    <li {if condition="$con eq 'Article'"} class="open" {/if}>
                         <a href="#" class="menu-dropdown">
                             <i class="menu-icon fa fa-file-text"></i>
                             <span class="menu-text">文章管理</span>
@@ -72,9 +72,9 @@
                                 </a>
                             </li>
                         </ul>                            
-                    </li> 
+                    </li>
 
-                    <li>
+                    <li {if condition="$con eq 'Link'"} class="open" {/if}>
                         <a href="#" class="menu-dropdown">
                             <i class="menu-icon fa fa-chain"></i>
                             <span class="menu-text">友情连接</span>
@@ -89,9 +89,9 @@
                                 </a>
                             </li>
                         </ul>                            
-                    </li> 
+                    </li>
 
-                    <li>
+                    <li {if condition="$con eq 'Conf'"} class="open" {/if}>
                         <a href="#" class="menu-dropdown">
                             <i class="menu-icon fa fa-gear"></i>
                             <span class="menu-text">系统</span>
