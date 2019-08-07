@@ -25,7 +25,6 @@ class Article extends Model
 
         //当更新update的时候触发
         Article::event('before_update', function ($article) {
-
             if ($_FILES['thumb']['tmp_name']) {//输出文件名，判断是否进行了上传【如果edit中没有上传缩略图 是不会进行下面的步骤的】
 
                 //更新时判断原来有没有缩略图，有的话就先进行删除 --开始
@@ -51,7 +50,6 @@ class Article extends Model
 
         //当删除delete的时候触发  删除对应服务器上的图片
         Article::event('before_delete', function ($article) {
-
             $arts = Article::find($article->id);
             $thumbpath = $_SERVER['DOCUMENT_ROOT'] . $arts['thumb'];
             if (file_exists($thumbpath)) {

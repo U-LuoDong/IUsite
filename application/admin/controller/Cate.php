@@ -108,21 +108,17 @@ class cate extends Common
         }
     }
 
-
-
-   
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     * 栏目收缩时将其所有的子栏目全部隐藏【返回所有子栏目的id】
+     */
+    public function ajaxlst()
+    {
+        if (request()->isAjax()) {
+            $cateid = input('cateid');
+            $sonids = model('cate')->getchilrenid($cateid);
+            echo json_encode($sonids);
+        } else {
+            $this->error('非法操作！');
+        }
+    }
 }

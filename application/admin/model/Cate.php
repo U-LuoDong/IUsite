@@ -47,15 +47,6 @@ class Cate extends Model
                 $this->_getchilrenid($cateres,$v['id']);
             }
         }
-
         return $arr;
     }
-
-    
-
-
-
-
-
-
 }
