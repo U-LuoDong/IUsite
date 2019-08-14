@@ -8,7 +8,6 @@ class Common extends Controller
         if(!session('id') || !session('name')){
            $this->error('您尚未登录系统',url('login/index')); 
         }
-
         $auth=new Auth();
         $request=Request::instance();
         $con=$request->controller();//获取当前控制器名称

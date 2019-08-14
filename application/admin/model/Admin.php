@@ -124,12 +124,5 @@ class Admin extends Model
         }else{
             return 1; //用户不存在的情况
         }
-
     }
-
-
-
-
-
-
 }

@@ -58,7 +58,7 @@ class Admin extends Common
                 $this->error($validate->getError());
             }
             $admin=new AdminModel();
-            $savenum=$admin->saveadmin($data,$admins1);
+            $savenum=$admin->saveadmin($data,$admins1);//第三季的方法比较好
             if($savenum == '2'){
                 $this->error('管理员用户名不得为空！');
             }
