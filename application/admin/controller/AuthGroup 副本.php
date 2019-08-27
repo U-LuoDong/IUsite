@@ -80,42 +80,16 @@ class AuthGroup extends Common
             }
             return;
         }
-        //        选择权限        开始 【六维数组】 无限极分类   最多是三级规则
-        $data=db('auth_rule')->where(['pid'=>0])->select();//获取顶级权限【二维数组】
-        foreach ($data as $k => $v) {
-            //$data[$k]['children']赋值后又是一个二维数组 把他看成$data就行
-            $data[$k]['children']=db('authRule')->where(['pid'=>$v['id']])->select();//得到二级规则 放到顶级规则下面
-            foreach ($data[$k]['children'] as $k1 => $v1) {
-                $data[$k]['children'][$k1]['children']=db('authRule')->where(['pid'=>$v1['id']])->select();
-            }
-        }
-//        选择权限         结束
-        $id=input('id');
-        $authGroups=db('auth_group')->find($id);
-        $rules=explode(',',$authGroups['rules']);//用户组已有的权限
-        $admins=db('admin')->find(session('id'));//头像用到了
-        $this->assign([
-            'admin'=>$admins,
-            'authGroups'=>$authGroups,
-            'data'=>$data,
-            'rules'=>$rules,
-        ]);
+        $authgroups=db('auth_group')->find(input('id'));
+        $this->assign('authgroups',$authgroups);//用户组已有的权限
+        $authRule=new \app\admin\model\AuthRule();
+        $authRuleRes=$authRule->authRuleTree();
+        $admins=db('admin')->find(session('id'));
+        $this->assign(array(
+            'admin'=>$admins,//头像用到了
+            'authRuleRes'=>$authRuleRes,
+        ));
         return view();
-
-
-
-
-//                          第二季采用的
-//        $authgroups=db('auth_group')->find(input('id'));
-//        $this->assign('authgroups',$authgroups);//用户组已有的权限
-//        $authRule=new \app\admin\model\AuthRule();
-//        $authRuleRes=$authRule->authRuleTree();
-//        $admins=db('admin')->find(session('id'));
-//        $this->assign(array(
-//            'admin'=>$admins,
-//            'authRuleRes'=>$authRuleRes,
-//        ));
-//        return view();
     }
 
     public function del(){
@@ -127,4 +101,27 @@ class AuthGroup extends Common
             $this->error('删除用户组失败！');
         }
     }
+
+
+    
+    
+
+
+
+
+   
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
 }

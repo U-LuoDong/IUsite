@@ -9,7 +9,7 @@
                 <!-- Sidebar Menu -->
                 <ul class="nav sidebar-menu">
                     <!--Dashboard-->
-                    <li {if condition="$con eq 'Admin' or 'auth_group' or 'auth_rule'"} class="open" {/if}>
+                    <li {if condition="$con eq 'Admin' or $con eq 'AuthGroup' or $con eq 'AuthRule'"} class="open" {/if}>
                     <a href="#" class="menu-dropdown">
                             <i class="menu-icon fa fa-user"></i>
                             <span class="menu-text">管理员</span>

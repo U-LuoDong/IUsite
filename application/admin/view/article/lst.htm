@@ -71,7 +71,7 @@
                                     {volist name="artres" id="art"}
                                     <tr>
                                         <td align="center">{$art.id}</td>
-                                        <td><?php echo mb_substr($art['title'], 0,9,'utf-8'); if(strlen($art['title'])>15){echo '...';}?></td>
+                                        <td><?php echo cut_str($art['title'],9);?></td>
                                         <td align="center">
                                             {if condition="$art['thumb'] neq ''"}
                                             <img src="{$art.thumb}" height="30">

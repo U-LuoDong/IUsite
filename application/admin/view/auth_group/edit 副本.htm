@@ -57,11 +57,11 @@
             <div class="widget-body">
                 <div id="horizontal-form">
                     <form class="form-horizontal" role="form" action="" method="post">
-                        <input type="hidden" name="id" value="{$authGroups.id}" />
+                        <input type="hidden" name="id" value="{$authgroups.id}" />
                        <div class="form-group">
                             <label for="username" class="col-sm-2 control-label no-padding-right">用户组名称</label>
                             <div class="col-sm-6">
-                                <input class="form-control"  placeholder="" value="{$authGroups.title}" name="title" required="" type="text">
+                                <input class="form-control"  placeholder="" value="{$authgroups.title}" name="title" required="" type="text">
                             </div>
                             <p class="help-block col-sm-4 red">* 必填</p>
                         </div>
@@ -70,7 +70,7 @@
                             <div class="col-sm-6">
                             <p class="help-block col-sm-4 red">
                                 <label>
-                                    <input id="status" class="checkbox-slider colored-darkorange" name="status" value="1"  {if condition="$authGroups['status'] eq 1"}checked="checked"{/if} type="checkbox">
+                                    <input class="checkbox-slider colored-darkorange" name="status" value="1"  {if condition="$authgroups['status'] eq 1"}checked="checked"{/if} type="checkbox">
                                     <span class="text"></span>
                                 </label>
                             </p>
@@ -84,48 +84,24 @@
                                     <thead class="bordered-darkorange">
                                         <tr>
                                             <th>
-                                                <label>
-                                                    <input id="chkAll" onclick="CheckAll(this.form)" value="全选" type="checkbox" class="colored-success checkbox-parent">
-                                                    <span class="text">权限全选</span>
-                                                </label>
+                                                配置权限
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {foreach name="data" item="vo"}
-                                        <tr>
-                                            <td>
-                                                <label style="padding-right:15px;">
-                                                    <input id="{$vo.id}" value="{$vo.id}" name="rules[]" dataid="id-{$vo.id}" <?php if(in_array($vo['id'], $rules)){ echo 'checked="checked"';}?> class="colored-success checkbox-parent" type="checkbox">
-                                                    <span class="text">{$vo.title}</span>
-                                                </label>
-                                            </td>
-                                        </tr>
-                                        {foreach name="vo['children']" item="vo2"}
-                                        <tr>
-                                            <td style="padding-left:30px;">
-                                                <label style="padding-right:15px;">
-                                                    <input <?php if(in_array($vo2['id'], $rules)){ echo 'checked="checked"';}?> class="colored-success checkbox-parent checkbox-child" id="{$vo2.id}" value="{$vo2.id}" name="rules[]"  dataid="id-{$vo.id}-{$vo2.id}" type="checkbox">
-                                                    <span class="text">{$vo2.title}</span>
-                                                </label>
-                                            </td>
-                                        </tr>
-                                        <!-- 让三级规则在一行显示-->
-                                        {if condition="$vo2['children']"}
-                                        <tr>
-                                            <td style="padding-left:60px;">
-                                                {foreach name="vo2['children']" item="vo3"}
-                                                <label style="padding-right:15px;">
-                                                    <input <?php if(in_array($vo3['id'], $rules)){ echo 'checked="checked"';}?> class="colored-success checkbox-child" id="{$vo3.id}" value="{$vo3.id}" name="rules[]" dataid="id-{$vo.id}-{$vo2.id}-{$vo3.id}" type="checkbox">
-                                                    <span class="text">{$vo3.title}</span>
-                                                </label>
-                                                {/foreach}
-                                            </td>
-                                        </tr>
-                                        {/if}
-                                        {/foreach}
-                                    {/foreach}
-
+                                        {volist name="authRuleRes" id="authRule"}
+                                            <tr>
+                                                <td>
+                                                    <label>
+                                                        <?php echo str_repeat('&nbsp;', $authRule['level']*3);?>
+                                                        <input name="rules[]" value="{$authRule.id}"
+                                                        <?php $arr=explode(',', $authgroups['rules']); if(in_array($authRule['id'], $arr)){echo 'checked="checked"';} ?>
+                                                         dataid="id-{$authRule.dataid}" class="inverted checkbox-parent {if condition="$authRule['level'] neq 0"} checkbox-child {/if} " type="checkbox">
+                                                        <span {if condition="$authRule['level'] eq 0"} style="font-weight:bold; font-size:14px;" {/if} class="text">{$authRule.title}</span>
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                        {/volist}
                                     </tbody>
                                 </table>
                             </div>
@@ -158,18 +134,6 @@
     <script src="__ADMIN__/style/beyond.js"></script>
     
 <script type="text/javascript">
-    /* 多选判断 全选 */
-    function CheckAll(form) {
-        // form.elements 选择form表单中的所有input元素   进行遍历
-        for (var i = 0; i < form.elements.length; i++) {
-            var e = form.elements[i];
-            // 如果该表单元素不是全选表单、不处于禁用状态且不是启用状态按钮  就将全选表单元素的选中状态赋给当前表单元素
-            if (e.id != 'chkAll' && e.id != 'status' && e.disabled == false) {
-                e.checked = form.chkAll.checked;
-            }
-        }
-    }
-
 /* 权限配置 */
 $(function () {
     //动态选择框，上下级选中状态变化
