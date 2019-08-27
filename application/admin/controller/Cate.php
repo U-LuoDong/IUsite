@@ -6,11 +6,12 @@ use app\admin\controller\Common;
 class cate extends Common
 {
 
-    protected $beforeActionList = [
-        // 'first',
-        // 'second' =>  ['except'=>'hello'],
-        'delsoncate'  =>  ['only'=>'del'],
-    ];
+//     前置方法
+//    protected $beforeActionList = [
+//        // 'first',
+//        // 'second' =>  ['except'=>'hello'],
+//        'delsoncate'  =>  ['only'=>'del'],
+//    ];
 
 
     public function lst()
@@ -83,31 +84,33 @@ class cate extends Common
             ));
         return view();
     }
-
+    /**
+     * 1、栏目、子栏目的内容 2、所有栏目对应的文章内容和缩略图【共三个】
+     */
     public function del(){
-        $del=db('cate')->delete(input('id'));
+        $cateIds=model('Cate')->getchilrenid(input('id'));
+        $cateIds[]=(int)input('id');
+        foreach ($cateIds as $key=>$v){
+            $articles=db('article')->where('cateid','=',$v)->select();
+            foreach ($articles as $v1){
+                //1、删除文章的缩略图
+                if($v1['thumb']){
+                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . $v1['thumb'])){
+                        unlink($_SERVER['DOCUMENT_ROOT'] . $v1['thumb']);
+                    }
+                }
+                //2、删除文章内容
+                db('article')->delete($v1['id']);
+            }
+        }
+        //3、删除所有栏目的内容
+        $del = db('cate')->delete($cateIds);
         if($del){
-            $this->success('删除栏目成功！',url('lst'));
+            $this->success('删除栏目成功！','lst');
         }else{
-            $this->error('删除栏目失败！');
+            $this->error('删除栏目失败!');
         }
     }
-
-    public function delsoncate(){
-        $cateid=input('id'); //要删除的当前栏目的id
-        $cate=new CateModel();
-        $sonids=$cate->getchilrenid($cateid);
-        $allcateid=$sonids;
-        $allcateid[]=$cateid;
-        foreach ($allcateid as $k=>$v) {
-            $article=new ArticleModel;
-            $article->where(array('cateid'=>$v))->delete();
-        }
-        if($sonids){
-        db('cate')->delete($sonids);
-        }
-    }
-
     /**
      * 栏目收缩时将其所有的子栏目全部隐藏【返回所有子栏目的id】
      */

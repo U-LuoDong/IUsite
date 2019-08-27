@@ -11,9 +11,12 @@ class Common extends Controller
         $auth=new Auth();
         $request=Request::instance();
         $con=$request->controller();//获取当前控制器名称
-        $this->assign('con',$con);//实现左侧菜单的展开状态
         $action=$request->action();//获取当前控制器方法
         $name=$con.'/'.$action;
+        $this->assign([
+            'con'=>$con,
+            'name'=>$name,
+        ]);//实现左侧菜单的展开状态
         //可以访问首页、管理员列表、退出登录和修改密码
         $notCheck=array('Index/index','Admin/lst','Admin/logout','Admin/edit');//不论那个管理员都可以访问的页面
          if(session('id')!=1){//针对超级管理员 如果id为1就不需要验证

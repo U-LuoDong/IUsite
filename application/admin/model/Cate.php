@@ -3,17 +3,17 @@ namespace app\admin\model;
 use think\Model;
 class Cate extends Model
 {
-    protected static function init()
-    {
-      // Cate::event('before_insert',function($cate){
-      //     dump($cate->pid); die;
-      // });
-
-      Cate::event('before_delete',function(){
-          dump(111); die;
-          return false;
-      });
-    }
+//    protected static function init()
+//    {
+//      // Cate::event('before_insert',function($cate){
+//      //     dump($cate->pid); die;
+//      // });
+//
+//      Cate::event('before_delete',function(){
+//          dump(111); die;
+//          return false;
+//      });
+//    }
 
     public function catetree(){
         $cateres=$this->order('sort desc')->select();
