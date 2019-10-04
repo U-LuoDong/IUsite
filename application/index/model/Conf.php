@@ -8,7 +8,7 @@ class Conf  extends Model
      * @return mixed
      */
     public function getAllConf(){
-    	$confres=$this::field('enname,cnname')->select();
+    	$confres=$this::field('ename,cname,value')->select();
     	return $confres;
     }
 }

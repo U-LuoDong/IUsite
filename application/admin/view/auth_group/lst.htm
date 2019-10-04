@@ -58,10 +58,10 @@
                         <table class="table table-bordered table-hover">
                             <thead class="">
                                 <tr>
-                                    <th class="text-center" width="10%">ID</th>
+                                    <th class="text-center" width="6%">ID</th>
                                     <th class="text-center">用户组名称</th>
-                                    <th class="text-center">启用状态</th>
-                                    <th class="text-center" width="20%">操作</th>
+                                    <th class="text-center" width="12%">用户组状态</th>
+                                    <th class="text-center" width="16%">操作</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,11 +70,10 @@
                                         <td align="center">{$authGroup.id}</td>
                                         <td align="center">{$authGroup.title}</td>
                                         <td align="center">
-                                            {if condition="$authGroup['status'] eq 1"}
-                                            <a class="btn btn-success btn-sm" href="javascript:void(0);">启用</a>
-                                            {else /}
-                                            <a class="btn btn-darkorange btn-sm" href="javascript:void(0);">禁用</a>
-                                            {/if}
+                                            <label>
+                                                <input {if condition="$authGroup['id'] eq 1"}disabled="disabled"{/if} {if condition="$authGroup['status'] eq 1"} checked="checked" {/if} id="{$authGroup.id}" onclick="changeStatus(this)" class="checkbox-slider colored-darkorange" type="checkbox">
+                                                <span class="text" style="cursor:pointer;"></span>
+                                            </label>
                                         </td>
                                         <td align="center">
                                             <a href="{:url('edit',array('id'=>$authGroup['id']))}" class="btn btn-primary btn-sm shiny">
@@ -113,6 +112,19 @@
     <!--Beyond Scripts-->
     <script src="__ADMIN__/style/beyond.js"></script>
     <script>
+        function changeStatus(o){
+            var id=$(o).attr('id');
+            $.ajax({
+                type:'POST',
+                dataType:'json',
+                data:{id:id},
+                url:"{:url('AuthGroup/changeStatus')}",
+                success:function(data){
+
+                }
+
+            });
+        }
         //layer删除用户组
         function layerdel(o){
             var id=$(o).attr("id");

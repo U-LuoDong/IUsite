@@ -1,55 +1,26 @@
 <?php
 namespace app\admin\validate;
-use think\Validate;
-class Conf extends Validate
+use think\validate;
+
+class Conf extends validate
 {
+	protected $rule=[
+		'cname'=>'require|max:60|unique:conf',
+		'ename'=>'require|max:60|unique:conf',
+		'dt_type'=>'require|number',
+		'cf_type'=>'require|number',
+	];
 
-    protected $rule=[
-        'cnname'=>'unique:conf|require|max:60',
-        'enname'=>'unique:conf|require|max:60',
-        'type'=>'require',
-    ];
+	protected $message=[
+		'cname.require'=>'中文名称不得为空！',
+		'cname.email'=>'必须是邮箱格式！',
+		'cname.unique'=>'中文名称不得重复！',
+		'ename.unique'=>'英文名称不得重复！',
+		'ename.require'=>'英文名称不得为空！',
+	];
 
-
-    protected $message=[
-        'cnname.require'=>'中文名称不得为空！',
-        'cnname.unique'=>'中文名称不得重复！',
-        'enname.unique'=>'英文名称不得重复！',
-        'enname.require'=>'英文名称不得为空！',
-        'cnname.max'=>'中文名称不能大于60个字符！',
-        'enname.max'=>'英文名称不能大于60个字符！',
-        'type.require'=>'配置类型不得为空！',
-    ];
-
-    protected $scene=[
-        'edit'=>['cnname','enname'],
-    ];
-
-
-
-
-
-
-    
-
-    
-
-
-
-
-   
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
+	protected $scene=[
+		'add'=>['cname','ename','dt_type','cf_type'],
+		'edit'=>['cname','ename','dt_type','cf_type'],
+	];
 }

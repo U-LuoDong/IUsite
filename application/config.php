@@ -17,7 +17,7 @@ return [
     // 应用命名空间
     'app_namespace'          => 'app',
     // 应用调试模式
-    'app_debug'              => true,
+    'app_debug'              => false,
     // 应用Trace
     'app_trace'              => false,
     // 应用模式状态
@@ -132,7 +132,8 @@ return [
 
     // 视图输出字符串内容替换
     'view_replace_str'       => [
-        '__INDEX__'=>'http://www.tp5_2.com/static/index'
+        '__INDEX__'=>'http://www.tp5_2.com/static/index',
+        '__ADMIN__' => 'http://www.tp5_2.com/static/admin',//这里存放的是admin的静态资源文件
     ],
     // 默认跳转页面对应的模板文件
     'dispatch_success_tmpl'  => THINK_PATH . 'tpl' . DS . 'dispatch_jump.tpl',
@@ -226,9 +227,18 @@ return [
 
     //分页配置
     'paginate'               => [
-        'type'      => 'bootstrap',
+//        'type'      => 'bootstrap',
+        'type'      => 'page\Page',//自定义分页样式
         'var_page'  => 'page',
         'list_rows' => 15,
+    ],
+    //状态码
+    'http_exception_template' => [
+        // 定义404错误的重定向页面地址
+        404 => APP_PATH.'404.html',
+        // 定义503的重定向页面地址【 服务器目前无法使用（由于超载或停机维护）】
+        503 => APP_PATH.'503.html',
+        // 还可以定义其它的HTTP status
     ],
 
     'captcha'  => [

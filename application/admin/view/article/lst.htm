@@ -80,7 +80,7 @@
                                             {/if}
                                         </td>
                                         <td align="center">{if condition="$art['author'] eq ''"}暂未作者{else /}{$art.author}{/if}</td>
-                                        <td align="center">{if condition="$art['rec'] eq 0"}未推荐{else /}已推荐{/if}</td>
+                                        <td align="center">{if condition="$art['rec'] eq 0"}<span class="label label-orange">未推荐</span>{else /}<span class="label label-blue">已推荐</span>{/if}</td>
                                         <td align="center">{$art.catename}</td>
                                         <td align="center">
                                             <a href="{:url('edit',array('id'=>$art['id']))}" class="btn btn-primary btn-sm shiny">

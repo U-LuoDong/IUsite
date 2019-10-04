@@ -1,43 +1,83 @@
 <?php
 namespace app\admin\controller;
-use app\admin\model\Conf as ConfModel;
-use app\admin\controller\Common;
 class Conf extends Common
 {
-    public function lst(){
+    public function conf()
+    {
         if(request()->isPost()){
-            $sorts=input('post.');
-            $conf=new ConfModel();
-            foreach ($sorts as $k => $v) {
-                $conf->update(['id'=>$k,'sort'=>$v]);
+            $data=input('post.');
+            $enameArr=db('conf')->column('ename');//查询表中所有的ename
+            $confArr=array();//对复选框的处理
+            $imgcolumn=db('conf')->where('dt_type',"=",6)->column('ename');//附件类型的字段
+            foreach ($data as $k => $v) {//对复选框的处理
+                $confArr[]=$k;
+                if(is_array($v)){
+                    $v=implode(',', $v);//组合成一个字符串
+                }
+                db('conf')->where('ename',$k)->update(['value'=>$v]);
             }
-            $this->success('更新排序成功！',url('lst'));
+            //没有这个字段且不是附件类型的字段【是否上传附件都没有对应字段】
+            foreach ($enameArr as $k => $v) {
+                if(!in_array($v, $confArr) && !in_array($v, $imgcolumn)){
+                    db('conf')->where('ename',$v)->update(['value'=>'']);
+                }
+            }
+            //对附件形式进行处理【多图上传】
+            foreach ($imgcolumn as $k => $v) {
+                //判断是否进行了上传
+                if($_FILES[$v]['tmp_name'] != ''){
+                    //1、删除服务器中之前的图片
+                    $oldImgSrc = db('conf')->field('value')->where('ename',$v)->find();
+                    if($oldImgSrc['value']){
+                        if (file_exists(ROOT_PATH . 'public/static/admin/uploads/conf/'.$oldImgSrc['value'])) {
+                            unlink(ROOT_PATH . 'public/static/admin/uploads/conf/'.$oldImgSrc['value']);
+                        }
+                    }
+                    //2、上传新图
+                    $file = request()->file($v);
+                    $info = $file->move(ROOT_PATH . 'public/static/admin/uploads/conf');
+                    $imgSrc=$info->getSaveName();
+                    //                if($imgSrc!=''){//有值才上传，避免出现没有修改图片会出现删除的情况【但不需要 因为前面已经判断了】
+                    db('conf')->where('ename',$v)->update(['value'=>$imgSrc]);
+                    //                }
+                }
+            }
+            $this->success('修改配置成功！',url('conf'));
             return;
         }
-        $confres=ConfModel::order('sort desc')->paginate(4);
+        $confRes=db('conf')->select();
         $admins=db('admin')->find(session('id'));
         $this->assign(array(
             'admin'=>$admins,
-            'confres'=>$confres,
+            'confRes'=>$confRes,
         ));
         return view();
     }
 
-    public function add(){
+    public function lst()
+    {
+        $confRes=db('conf')->field('id,cname,ename,value,values')->paginate(6);
+        $admins=db('admin')->find(session('id'));
+        $this->assign(array(
+            'admin'=>$admins,
+            'confRes'=>$confRes,
+        ));
+        return view();
+    }
+
+    public function add()
+    {
         if(request()->isPost()){
             $data=input('post.');
-            $validate = \think\Loader::validate('Conf');
-            if(!$validate->check($data)){
+            $validate=validate('conf');
+            if(!$validate->scene('add')->check($data)){
                 $this->error($validate->getError());
             }
-            if($data['values']){
-                $data['values']=str_replace('，', ',', $data['values']);
-            }
-            $conf=new ConfModel();
-            if($conf->save($data)){
-                $this->success('添加配置成功！',url('lst'));
+            $add=db('conf')->insert($data);
+            if($add){
+                $this->success('添加配置项成功！',url('lst'));
             }else{
-                $this->error('添加配置失败！');
+                $this->error('添加配置项失败！');
             }
         }
         $admins=db('admin')->find(session('id'));
@@ -45,25 +85,22 @@ class Conf extends Common
         return view();
     }
 
-    public function edit(){
+    public function edit($id)
+    {
         if(request()->isPost()){
             $data=input('post.');
-            $validate = \think\Loader::validate('Conf');
+            $validate=validate('conf');
             if(!$validate->scene('edit')->check($data)){
                 $this->error($validate->getError());
             }
-            if($data['values']){
-                $data['values']=str_replace('，', ',', $data['values']);
-            }
-            $conf=new ConfModel();
-            $save=$conf->save($data,['id'=>$data['id']]);
-            if($save!==false){
+            $save=db('conf')->update($data);
+            if($save){
                 $this->success('修改配置成功！',url('lst'));
             }else{
                 $this->error('修改配置失败！');
             }
         }
-        $confs=ConfModel::find(input('id'));
+        $confs=db('conf')->find($id);
         $admins=db('admin')->find(session('id'));
         $this->assign(array(
             'admin'=>$admins,
@@ -72,79 +109,12 @@ class Conf extends Common
         return view();
     }
 
-    public function del(){
-        $del=ConfModel::destroy(input('id'));
+    public function del($id){
+        $del=db('conf')->delete($id);
         if($del){
-           $this->success('删除配置项成功！',url('lst')); 
+            $this->success('删除配置项成功！',url('lst'));
         }else{
-            $this->error('删除配置项失败！');
+            $this->error('删除配置失败！');
         }
     }
-
-    public function conf(){
-        if(request()->isPost()){
-            $data=input('post.');
-            $formarr=array();//1、将页面提交过来的数组整合成字段数组
-            foreach ($data as $k => $v) {
-                $formarr[]=$k;
-            }
-            $_confarr=db('conf')->field('enname')->select();
-            $confarr=array();//2、将查询出来的二维数组转换成一维字段数组
-            foreach ($_confarr as $k => $v) {
-                $confarr[]=$v['enname'];
-            }
-            $checkboxarr=array();
-            foreach ($confarr as $k => $v) {
-                if(!in_array($v, $formarr)){//3、判断数据表的字段在网页提交中的是否存在
-                    $checkboxarr[]=$v;//4、将不存在的字段整合成一个数组
-                }
-            }
-            if($checkboxarr){//5、如果有值就将对应字段赋空值
-                foreach ($checkboxarr as $ke => $v) {
-                    ConfModel::where('enname',$v)->update(['value'=>'']);
-                }
-            }
-            if($data){//6、再更新提交的值
-                foreach ($data as $k=>$v) {
-                    ConfModel::where('enname',$k)->update(['value'=>$v]);
-                }
-                $this->success('修改配置成功！');
-            }
-            return;
-        }
-        $confres=ConfModel::order('sort desc')->select();
-        $admins=db('admin')->find(session('id'));
-        $this->assign(array(
-            'admin'=>$admins,
-            'confres'=>$confres,
-        ));
-        return view();
-    }
-
-
-
-
-
-    
-
-    
-
-
-
-
-   
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -1,11 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     <title>{$confres.sitename}</title>
-    <meta name="description" content="ThinkPHP5.0"/>
+    <meta name="description" content="{$confres.desc}"/>
     <meta name="keywords" content="{$confres.keywords}"/>
     <link rel="stylesheet" type="text/css" media="all" href="__INDEX__/style/style.css"/>
     <script type="text/javascript" src="__INDEX__/style/jquery-1.4.1.min.js"></script>
@@ -271,7 +270,7 @@
         <h5>
             FOLLOW US</h5>
 
-        <img src="__INDEX__/images/weixin.png" alt="" title="扫描添加我们的公众微信" class="alignnone size-full wp-image-18966"
+        <img src="__ADMIN__/uploads/conf/{$confres.ewm}" alt="" title="扫描添加我们的公众微信" class="alignnone size-full wp-image-18966"
              height="140" width="120"></a></div>
 </div>
 {include file="public/footer"}

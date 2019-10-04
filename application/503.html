@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>站点关闭维护中，请稍后再试...</title>
+    <style type="text/css">
+        #Layer {
+            /*display: none;*/
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-image: url('/503.jpg');
+            background-size:cover;
+            background-repeat:no-repeat;
+        }
+    </style>
+</head>
+<body>
+    <div id="Layer"></div><!--遮罩层-->
+</body>
+<script type="text/javascript" src="__ADMIN__/js/jquery-3.4.1.min.js"></script>
+<script>
+    //适应网页大小开始
+    //浏览器窗口大小被改变时触发事件
+    window.onresize = function() {
+        layer(); //动态改变遮罩大小
+        //动态改变弹窗位置
+        setPosition();
+    }
+    //动态改变遮罩大小
+    function layer() {
+        var doc = document.documentElement;
+        relHeight = (doc.clientHeight > doc.scrollHeight) ? doc.clientHeight : doc.scrollHeight; //获取屏幕高度和当前页面高度中的较大值
+        document.getElementById('Layer').style.height = relHeight + 'px';
+        relWidth = (doc.clientWidth > doc.scrollWidth) ? doc.scrollWidth : doc.clientWidth; //获取屏幕宽度和当前页面宽度中的较小值
+        document.getElementById('Layer').style.width = relWidth + 'px';
+//		alert("最大高度："+relHeight+"最小宽度"+relWidth);
+    }
+    layer();
+    function setPosition() {
+        var doc = document.documentElement;
+        //获得窗口的垂直位置;
+        var iTop = (doc.clientHeight - 6 - document.getElementById('login').offsetHeight) / 2;
+        //获得窗口的水平位置;
+        var iLeft = (doc.clientWidth - 5 - document.getElementById('login').offsetWidth) / 2;
+        $(login).css({
+            'top': iTop,
+            'left': iLeft
+        });
+    }
+    setPosition();
+    //适应网页大小结束
+</script>
+</html>

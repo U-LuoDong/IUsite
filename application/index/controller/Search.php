@@ -5,7 +5,6 @@ class Search extends Common
 {
     /**
      * 搜索
-     * @return \think\response\View
      */
     public function index()
     {

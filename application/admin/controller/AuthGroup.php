@@ -13,6 +13,17 @@ class AuthGroup extends Common
         ));
         return view();
     }
+    //异步修改用户组状态
+    public function changeStatus()
+    {
+        $id = input('id');
+        $authGroups = db('authGroup')->field('status')->find($id);
+        if ($authGroups['status'] == 1) {
+            db('authGroup')->where(array('id' => $id))->update(['status' => 0]);
+        } else {
+            db('authGroup')->where(array('id' => $id))->update(['status' => 1]);
+        }
+    }
 
     public function add(){
         if(request()->isPost()){

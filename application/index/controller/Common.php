@@ -3,9 +3,14 @@ namespace app\index\controller;
 use think\Controller;
 class Common extends Controller
 {
-
+    public $config;//数组 键是英文名称 值是对应的值【
     public function _initialize(){
-    	//当前位置
+        $this->getConf();//网站配置项【SEO等系统配置信息】
+        if($this->config['closesite'] == '关闭'){
+            abort('503','站点关闭维护中，请稍后再试...');
+//            die('站点关闭维护中，请稍后再试...');
+        }
+        //当前位置
         //1、栏目
         if(input('cateid')){
             $this->getPos(input('cateid'));
@@ -16,8 +21,6 @@ class Common extends Controller
             $cateid=$articles['cateid'];
             $this->getPos($cateid);
         }
-
-    	$this->getConf();//网站配置项【首页中有显示站点名称】
 
         $this->getNavCates();//网站栏目导航
 
@@ -30,9 +33,6 @@ class Common extends Controller
 
     /**
      * 网站栏目导航【但写死了 最多显示二级分类】
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
     public function getNavCates(){
         $cateres=db('cate')->where(array('pid'=>0))->order('sort','desc')->select();//获取顶级分类的数组
@@ -52,8 +52,9 @@ class Common extends Controller
         $_confres=$conf->getAllConf();//获取配置表中全部行的中英文字段
         $confres=array();
         foreach ($_confres as $k => $v) {
-            $confres[$v['enname']]=$v['cnname'];//合并2个字段的内容 比如：SiteDesc=>站点描述
+            $confres[$v['ename']]=$v['value'];//合并2个字段的内容 比如：SiteDesc=>站点描述
         }
+        $this->config = $confres;
         $this->assign('confres',$confres);
     }
 

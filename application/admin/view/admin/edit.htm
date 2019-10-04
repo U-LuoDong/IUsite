@@ -17,7 +17,46 @@
     <link href="__ADMIN__/style/demo.css" rel="stylesheet">
     <link href="__ADMIN__/style/typicons.css" rel="stylesheet">
     <link href="__ADMIN__/style/animate.css" rel="stylesheet">
-    
+    <script src="__ADMIN__/style/jquery_002.js"></script>
+    <script src="__ADMIN__/plus/layer/layer.js"></script>
+    <script src="__ADMIN__/plus/uploadify/jquery.uploadify.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#uploadify").uploadify({
+                //指定swf文件
+                'swf': "__ADMIN__/plus/uploadify/uploadify.swf",
+                //后台处理的页面
+                'uploader': "{:url('Admin/upimg',array('adminId'=>$admin1['id']))}",
+                'progressData' : 'speed',
+                //按钮显示的文字
+                'buttonText': '上传文件',
+                //按钮样式
+                'buttonClass': 'btn btn-azure',
+                //显示的高度和宽度，默认 height 30；width 120
+                //'height': 15,
+                //'width': 80,
+                //上传文件的类型  默认为所有文件    'All Files'  ;  '*.*'
+                //在浏览窗口底部的文件类型下拉菜单中显示的文本
+                'fileTypeDesc': 'Image Files',
+                //设定发送数据的name值
+                'fileObjName':'tx',
+                'formData' : { 'mark' : 'uploadify'},//解决使用flash来处理文件上传session问题
+                'sizeLimit': 10240,//限制大小
+                //允许上传的文件后缀
+                'onUploadSuccess' : function(file,data,response){
+                    $("#hideSrc").val(data);
+                    var imgsrc="/HeadPortrait/"+data;
+                    var img="<img height='100' src='"+imgsrc+"'>";
+                    $("#imgdiv").show();
+                    $("#litpic").html(img);//会进行覆盖
+                    $("#sc").hide();
+                }
+            });
+            $("#uploadify-button").prepend("<i style='padding-right:4px;' class='fa fa-upload'></i>");
+            $("#uploadify-button").removeAttr('style');
+        });
+    </script>
+
 </head>
 <body>
     <!-- 头部 -->
@@ -83,19 +122,32 @@
                                 <input class="form-control"  placeholder="" name="password" value="" type="text">
                             </div>
                         </div>
+
                         <div class="form-group">
-                            <label for="username" class="col-sm-2 control-label no-padding-right">缩略图</label>
+                            <label class="col-sm-2 control-label no-padding-right">缩略图</label>
                             <div class="col-sm-6">
-                                <input style="float:left;"  placeholder="" name="tx" type="file">
-                                <!--如果有缩略图的话就进行显示-->
-                                {if condition="$admin1['HeadPortrait'] neq ''"}
-                                <img style="float:left;" src="{$admin1.HeadPortrait}" width="30">
-                                {else /}
-                                暂无缩略图
-                                {/if}
+                                <label id="sc">
+                                    <span id="uploadify"></span>
+                                    <input id="hideSrc" value="{$admin1.HeadPortrait}" type="hidden">
+                                </label>
+                                <label>
+                                    <div id="cancel" style="float:left;" class="uploadify-button btn btn-azure"><span class="uploadify-button-text"><i style="padding-right:4px;" class="fa fa-rotate-left"></i>撤销上传</span></div>
+                                </label>
                             </div>
                             <p class="help-block col-sm-4 red">* 必填</p>
                         </div>
+                        <div class="form-group" id="imgdiv" {if condition="$admin1.HeadPortrait eq ''"}style="display:none;"{/if}>
+                            <label class="col-sm-2 control-label no-padding-right"></label>
+                            <div class="col-sm-6">
+                                <label id="litpic">
+                                    {if condition="$admin1.HeadPortrait"}
+                                    <img src="/HeadPortrait/{$admin1.HeadPortrait}" height="100">
+                                    {/if}
+                                </label>
+                            </div>
+                            <p class="help-block col-sm-4 red">* 必填</p>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <button type="submit" class="btn btn-default">保存信息</button>
@@ -116,12 +168,42 @@
     </div>
 
         <!--Basic Scripts-->
-    <script src="__ADMIN__/style/jquery_002.js"></script>
     <script src="__ADMIN__/style/bootstrap.js"></script>
-    <script src="__ADMIN__/style/jquery.js"></script>
     <!--Beyond Scripts-->
     <script src="__ADMIN__/style/beyond.js"></script>
-    
+    <script>
+        //有图片时：必须先删除才能上传新的图片
+        if ($("#hideSrc").val()) {
+            $("#sc").hide();//隐藏上传图片按钮
+        }
+        $("#cancel").click(function () {
+            var imgurl = $("#hideSrc").val();
+            if (!imgurl) {
+                layer.msg('请先上传图片！', {icon: 2});
+                return false;
+            }
+            var adminId = {$admin1.id};
+            layer.confirm('确定要删除图片吗？', {icon: 3, title: '提示'}, function (index) {
+                $("#imgdiv").hide();
+                $("#hideSrc").val('');
+                $.ajax({
+                    type: "post",
+                    dataType: "json",
+                    data: {imgurl: imgurl,adminId:adminId},
+                    url: "{:url('Admin/delimg')}",
+                    success: function (data) {
+                        if (data == 1) {
+                            layer.msg('删除成功！', {icon: 1});
+                            $("#sc").show();//隐藏上传图片按钮
+                        } else {
+                            layer.msg('删除失败！', {icon: 2});
+                        }
+                    }
+                });
+                layer.close(index);
+            });
+        });
+    </script>
 
 
 </body></html>

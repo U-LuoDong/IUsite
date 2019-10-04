@@ -61,6 +61,7 @@
                                 <th class="text-center">用户名称</th>
                                 <th class="text-center">所属用户组</th>
                                 <th class="text-center">头像</th>
+                                <th class="text-center">状态</th>
                                 <th class="text-center" width="20%">操作</th>
                             </tr>
                         </thead>
@@ -73,10 +74,17 @@
                                     <td align="center">
                                         <!--如果有缩略图的话就进行显示-->
                                         {if condition="$admin['HeadPortrait'] neq ''"}
-                                        <img src="{$admin.HeadPortrait}" height="30">
+                                        <img src="/HeadPortrait/{$admin.HeadPortrait}" height="30">
                                         {else /}
                                         暂无缩略图
                                         {/if}
+                                    </td>
+                                    <td align="center">
+                                        <label>
+                                            <input {if condition="$admin['id'] eq 1"}disabled="disabled"{/if} {if condition="$admin['status'] eq 1"} checked="checked"{/if} id="{$admin.id}"
+                                            onclick="changeStatus(this)" class="checkbox-slider colored-darkorange" type="checkbox">
+                                            <span class="text" style="cursor:pointer;"></span>
+                                        </label>
                                     </td>
                                     <td align="center">
                                         <a href="{:url('edit',array('id'=>$admin['id']))}" class="btn btn-primary btn-sm shiny">
@@ -114,6 +122,20 @@
     <!--Beyond Scripts-->
     <script src="__ADMIN__/style/beyond.js"></script>
     <script>
+        /**
+         * 异步修改管理员状态
+         */
+        function changeStatus(o){
+            var id=$(o).attr('id');
+            $.ajax({
+                type:'POST',
+                dataType:'json',
+                data:{id:id},
+                url:"{:url('Admin/changestatus')}",
+                success:function(data){
+                }
+            });
+        }
         //layer删除管理员
         function layerdel(o){
             var id=$(o).attr("id");

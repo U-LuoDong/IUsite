@@ -7,8 +7,6 @@ class Cate  extends Model
 
     /**
      * 查找子集栏目
-     * @param $cateid
-     * @return string
      */
     public function getchilrenid($cateid){
         $cateres=$this->select();
@@ -31,11 +29,6 @@ class Cate  extends Model
 
     /**
      * 查找父级栏目
-     * @param $cateid
-     * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
     public function getparents($cateid){
         $cateres=$this->field('id,pid,catename')->select();

@@ -120,15 +120,14 @@
                         </div>  
 
                         <div class="form-group">
-                            <label for="username" class="col-sm-2 control-label no-padding-right">推荐到首页</label>
+                            <label class="col-sm-2 control-label no-padding-right">推荐到首页</label>
                             <div class="col-sm-6">
-                                <label  class="radio" style="float:left; margin-right:10px;" style="margin-right:15px;">
+                                <label  class="radio" style="float:left; margin-right:10px;">
                                     <input  name="rec_index" value="1" type="radio">
                                     <span class="text">是</span>
                                 </label>
-                                <label class="radio" style="float:left; margin-right:10px;" style="margin-right:15px;">
-                                    <!--<input checked="checked"  class="inverted" name="rec_index" value="0" type="radio">-->
-                                    <input checked="checked"  class="inverted"  value="0" type="radio">
+                                <label class="radio" style="float:left; margin-right:10px;">
+                                    <input checked="checked"  class="inverted" name="rec_index" value="0" type="radio">
                                     <span class="text">否</span>
                                 </label>
                             </div>
@@ -139,13 +138,11 @@
                             <label for="username" class="col-sm-2 control-label no-padding-right">推荐到底部</label>
                             <div class="col-sm-6">
                                 <label class="radio" style="float:left; margin-right:10px;" style="margin-right:15px;">
-                                    <!--<input name="rec_bottom" value="1" type="radio">-->
-                                    <input  value="1" type="radio">
+                                    <input name="rec_bottom" value="1" type="radio">
                                     <span class="text">是</span>
                                 </label>
                                 <label class="radio" style="float:left; margin-right:10px;" style="margin-right:15px;">
-                                    <!--<input checked="checked"  class="inverted" name="rec_bottom" value="0" type="radio">-->
-                                    <input checked="checked"  class="inverted" value="0" type="radio">
+                                    <input checked="checked"  class="inverted" name="rec_bottom" value="0" type="radio">
                                     <span class="text">否</span>
                                 </label>
                             </div>
@@ -185,10 +182,23 @@
     <!--Beyond Scripts-->
     <script src="__ADMIN__/style/beyond.js"></script>
     <script type="text/javascript">
+        //实例化编辑器
+        //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
 
-    //实例化编辑器
-    //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
-    UE.getEditor('content',{initialFrameWidth:800,initialFrameHeight:400,});
+        UE.getEditor('content', {
+            toolbars: [
+                [
+                    'fullscreen', 'source', '|', 'undo', 'redo', '|',
+                    'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
+                    'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+                    'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
+                    // 'directionalityltr', 'directionalityrtl', 'indent', '|',
+                    // 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
+                    // 'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
+                    // 'simpleupload', 'insertimage', 'emotion', 'scrawl', 'insertvideo', 'music', 'attachment'
+                ]
+            ], initialFrameWidth: 850, initialFrameHeight: 400
+        });
     </script>
     
 

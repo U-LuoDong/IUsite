@@ -81,23 +81,46 @@ class Article extends Common
     }
 
 
- 
+    /**
+     * uploadify异步上传图片
+     */
+    public function upimg()
+    {
+        if ($_FILES['thumb']['tmp_name']) {
+            $articleId = input('articleId');
+            $file = request()->file('thumb');
+            $info = $file->move(ARTICLEIMG);
+            if ($info) {
+                // 成功上传后 获取上传信息
+                if ($articleId) {//【针对修改界面 添加界面没有cateid】
+                    db('article')->where('id', $articleId)->setField('thumb', '/uploads/'.$info->getSaveName());
+                }
+                echo '/uploads/'.$info->getSaveName();
+            } else {
+                // 上传失败获取错误信息
+                echo $file->getError();
+            }
+        }
+    }
 
-
-
-   
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     * 异步撤销图片
+     */
+    public function delimg()
+    {
+        //1、修改表记录 针对修改edit
+        $articleId = input('articleId');
+        if ($articleId) {
+            db('article')->where(['id' => $articleId])->update(['thumb' => '']);
+        }
+        //2、删除服务器中的图片
+        if (file_exists($_SERVER['DOCUMENT_ROOT'].input('imgurl'))) {
+            $del = unlink($_SERVER['DOCUMENT_ROOT'].input('imgurl'));
+        }
+        if ($del) {
+            echo 1;
+        } else {
+            echo 0;
+        }
+    }
 }

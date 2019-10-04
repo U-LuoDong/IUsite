@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html><head>
-        <meta charset="utf-8">
+	    <meta charset="utf-8">
     <title>后台管理系统</title>
 
     <meta name="description" content="Dashboard">
@@ -20,14 +20,14 @@
     
 </head>
 <body>
-    <!-- 头部 -->
-    {include file="public/top" /} 
-    <!-- /头部 -->
-    
-    <div class="main-container container-fluid">
-        <div class="page-container">
-            <!-- Page Sidebar -->
-            {include file="public/left" /} 
+	<!-- 头部 -->
+    {include file="public/top"}
+	<!-- /头部 -->
+	
+	<div class="main-container container-fluid">
+		<div class="page-container">
+			<!-- Page Sidebar -->
+            {include file="public/left"}
             <!-- /Page Sidebar -->
             <!-- Page Content -->
             <div class="page-content">
@@ -35,7 +35,7 @@
                 <div class="page-breadcrumbs">
                     <ul class="breadcrumb">
                                         <li>
-                        <a href="#">系统</a>
+                        <a href="#">系统设置</a>
                     </li>
                                         <li>
                         <a href="{:url('lst')}">配置管理</a>
@@ -58,40 +58,61 @@
                 <div id="horizontal-form">
                     <form class="form-horizontal" role="form" action="" method="post">
                         <input type="hidden" name="id" value="{$confs.id}">
-                       <div class="form-group">
+                        <div class="form-group">
                             <label for="username" class="col-sm-2 control-label no-padding-right">中文名称</label>
                             <div class="col-sm-6">
-                                <input class="form-control"  placeholder="" name="cnname" value="{$confs.cnname}" required="" type="text">
+                                <input class="form-control" placeholder="" name="cname" required="" value="{$confs.cname}" type="text">
                             </div>
                             <p class="help-block col-sm-4 red">* 必填</p>
                         </div>
+
                         <div class="form-group">
                             <label for="username" class="col-sm-2 control-label no-padding-right">英文名称</label>
                             <div class="col-sm-6">
-                                <input class="form-control"  placeholder="" name="enname" value="{$confs.enname}" required="" type="text">
+                                <input class="form-control" placeholder="" name="ename" value="{$confs.ename}" required="" type="text">
                             </div>
                             <p class="help-block col-sm-4 red">* 必填</p>
                         </div>
+
                         <div class="form-group">
-                            <label for="username" class="col-sm-2 control-label no-padding-right">配置类型</label>
+                            <label for="group_id" class="col-sm-2 control-label no-padding-right">配置类型</label>
                             <div class="col-sm-6">
-                                <select disabled="disabled" name="type">
-                                    <option value="0">请选择</option>
-                                    <option {if condition="$confs['type'] eq 1"} selected="selected"{/if} value="1">单行文本</option>
-                                    <option {if condition="$confs['type'] eq 2"} selected="selected"{/if} value="2">多行文本</option>
-                                    <option {if condition="$confs['type'] eq 3"} selected="selected"{/if} value="3">单选按钮</option>
-                                    <option {if condition="$confs['type'] eq 4"} selected="selected"{/if} value="4">复选框</option>
-                                    <option {if condition="$confs['type'] eq 5"} selected="selected"{/if} value="5">下拉菜单</option>
+                                <select name="dt_type" style="width: 100%;">
+                                    <option {if condition="$confs['dt_type'] eq 1"} selected="selected" {/if} value="1">单行文本框</option>
+                                    <option {if condition="$confs['dt_type'] eq 2"} selected="selected" {/if} value="2">单选按钮</option>
+                                    <option {if condition="$confs['dt_type'] eq 3"} selected="selected" {/if} value="3">复选框</option>
+                                    <option {if condition="$confs['dt_type'] eq 4"} selected="selected" {/if} value="4">下拉框</option>
+                                    <option {if condition="$confs['dt_type'] eq 5"} selected="selected" {/if} value="5">文本域</option>
+                                    <option {if condition="$confs['dt_type'] eq 6"} selected="selected" {/if} value="6">附件</option>
                                 </select>
                             </div>
-                            <p class="help-block col-sm-4 red">* 必填</p>
+                        </div>  
+
+                        <div class="form-group">
+                            <label for="group_id" class="col-sm-2 control-label no-padding-right">配置分类</label>
+                            <div class="col-sm-6">
+                                <select name="cf_type" style="width: 100%;">
+                                    <option {if condition="$confs['cf_type'] eq 1"} selected="selected" {/if} value="1">站点基本信息</option>
+                                    <option {if condition="$confs['cf_type'] eq 2"} selected="selected" {/if} value="2">联系方式</option>
+                                    <option {if condition="$confs['cf_type'] eq 3"} selected="selected" {/if} value="3">SEO设置</option>
+                                </select>
+                            </div>
+                        </div>  
+
+                        <div class="form-group">
+                            <label for="username" class="col-sm-2 control-label no-padding-right">值/默认值</label>
+                            <div class="col-sm-6">
+                                <textarea name="value" class="form-control"> {$confs.value} </textarea>
+                            </div>
                         </div>
+
                         <div class="form-group">
                             <label for="username" class="col-sm-2 control-label no-padding-right">可选值</label>
                             <div class="col-sm-6">
-                                <textarea name="values" class="form-control">{$confs.values}</textarea>
+                                <textarea name="values" class="form-control"> {$confs.values} </textarea>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <button type="submit" class="btn btn-default">保存信息</button>
@@ -108,10 +129,10 @@
                 <!-- /Page Body -->
             </div>
             <!-- /Page Content -->
-        </div>  
-    </div>
+		</div>	
+	</div>
 
-        <!--Basic Scripts-->
+	    <!--Basic Scripts-->
     <script src="__ADMIN__/style/jquery_002.js"></script>
     <script src="__ADMIN__/style/bootstrap.js"></script>
     <script src="__ADMIN__/style/jquery.js"></script>

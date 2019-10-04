@@ -17,5 +17,7 @@ return [
         ':id'   => ['index/hello', ['method' => 'get'], ['id' => '\d+']],
         ':name' => ['index/hello', ['method' => 'post']],
     ],
+    //定义登录路由
+    'login'=>'admin/login/index',
 
 ];
